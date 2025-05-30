@@ -1,38 +1,36 @@
-import pygame
+from ursina import *
+from ursina.prefabs.first_person_controller import FirstPersonController
 
-pygame.init()
-screen = pygame.display.set_mode((600, 600))
-pygame.display.set_caption("Minecraft")
+app = Ursina()
 
-points = [(250,250),(350,250),(350,350),(250,350)]
+block_texture_dirt = load_texture('dirt.png')
+block_texture_grass = load_texture('grass.png')
+sky_texture = load_texture('sky.png')
 
-def draw_polygon():
-    screen.fill((0, 0, 0))  # Clear screen
-    pygame.draw.polygon(screen, (255, 0, 0), points)
-    pygame.display.update()
+for z in range(20):
+    for x in range(20):
+        dirt_block = Entity(
+            model='cube',
+            texture=block_texture_dirt,
+            scale=(1, 1, 1),
+            position=(x, 0, z),
+            collider='box'
+        )
+        grass_block = Entity(
+            model='cube',
+            texture=block_texture_grass,
+            scale=(1, 1, 1),
+            position=(x, 1, z)
+        )
+player = FirstPersonController()
+player.gravity = .1
+player.jump_height = 2
+player.cursor.visible = True
 
-def scale_polygon(scale_factor):
-    global points
+Sky(texture=sky_texture)
 
-    cx = sum(x for x, y in points) / len(points)
-    cy = sum(y for x, y in points) / len(points)
+def input(key):
+    if key == 'escape':
+        application.quit()
 
-    points = [((x - cx) * scale_factor + cx, (y - cy) * scale_factor + cy) for x, y in points]
-
-draw_polygon()
-
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_DOWN:
-                scale_polygon(0.9)
-                draw_polygon()
-            if event.key == pygame.K_UP:
-                scale_polygon(1.1)
-                draw_polygon()
-
-
-pygame.quit()
+app.run()
