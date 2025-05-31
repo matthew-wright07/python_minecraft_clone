@@ -6,6 +6,7 @@ app = Ursina()
 block_texture_dirt = load_texture('dirt.png')
 block_texture_grass = load_texture('grass.png')
 sky_texture = load_texture('sky.png')
+custom_crosshair_texture = load_texture('crosshair.png')
 
 for z in range(20):
     for x in range(20):
@@ -26,6 +27,10 @@ player = FirstPersonController()
 player.gravity = .1
 player.jump_height = 2
 player.cursor.visible = True
+player.cursor.color=color.white
+player.cursor.texture = custom_crosshair_texture
+player.cursor.scale = .05
+player.cursor.rotation_z = 90
 
 Sky(texture=sky_texture)
 
